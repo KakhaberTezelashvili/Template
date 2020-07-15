@@ -18,7 +18,7 @@ namespace Template.API.Controllers
         [HttpPost("test")]
         public async void Get(CreateOrderCommand command)
         {
-            //await _bus.Send(new CancelOrderCommand());
+            await _bus.Send(command);
         }
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Template.Infrastructure
 {
-    internal abstract class DataAccessBase : IDisposable
+    public abstract class DataAccessBase : IDisposable
     {
         private IDbConnection SQL => _connection;
         private ConnectionState State => _connection?.State ?? ConnectionState.Closed;

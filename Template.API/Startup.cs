@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Template.API.Filters;
 using Template.Application.Commands;
+using Template.Domain.Repositories;
+using Template.Infrastructure.Repositories;
 
 namespace Template.API
 {
@@ -32,11 +34,16 @@ namespace Template.API
                 options.SuppressModelStateInvalidFilter = true;
             })
             .AddFluentValidation();
+            
+            services.AddScoped<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
 
             var assembly = AppDomain.CurrentDomain.Load("Template.Application");
             services.AddMediatR(assembly);
 
-            services.AddTransient<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
+            services.AddScoped<IOrderRepository>(options =>
+            {
+                return new OrderRepository(@"Server=localhost\SQLEXPRESS;Database=TemplateDB;Trusted_Connection=True;");
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -47,8 +54,6 @@ namespace Template.API
             }
 
             app.UseRouting();
-
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
