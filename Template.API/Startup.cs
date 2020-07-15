@@ -1,10 +1,13 @@
 using System;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Template.Application.Commands;
 
 namespace Template.API
 {
@@ -19,10 +22,17 @@ namespace Template.API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            })
+            .AddFluentValidation();
 
             var assembly = AppDomain.CurrentDomain.Load("Template.Application");
             services.AddMediatR(assembly);
+
+            services.AddTransient<IValidator<CreateOrderCommand>, CreateOrderCommandValidator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

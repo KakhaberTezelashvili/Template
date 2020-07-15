@@ -15,10 +15,10 @@ namespace Template.API.Controllers
             _bus = bus;
         }
 
-        [HttpGet("test")]
-        public async void Get()
+        [HttpPost("test")]
+        public async void Get(CreateOrderCommand command)
         {
-            await _bus.Send(new CancelOrderCommand());
+            //await _bus.Send(new CancelOrderCommand());
         }
     }
 }
